@@ -31,9 +31,6 @@ def user_data(username, password):
     except sqlite3.Error as e:
         print(f"Обнаружена ошибка: {e}")
         return False
-    finally:
-        conn.close()
-
 
 def appendUser(username, password):
     conn = connection()
@@ -49,8 +46,7 @@ def appendUser(username, password):
     except sqlite3.Error as e:
         print(f"Обнаружена ошибка: {e}")
         return False
-    finally:
-        conn.close()
+
 def inputLogin():
     username = entry1.get()
     password = entry2.get()
@@ -58,14 +54,18 @@ def inputLogin():
     if user_info:
         id, username, password, role = user_info
         messagebox.showinfo("Успех!", f"Добро пожаловать, {username}!\nТвоя роль: {role}. ")
-
         entry2.delete(0, END)
     else:
-        messagebox.showerror("Отказано в доступе.", "Вы не вошли.")
+        messagebox.showerror("Отказано в доступе.", "Неверные данные.")
+        entry2.delete(0, END)
 
 def inputRegister():
     username = entry1.get()
     password = entry2.get()
+    if not username or not password:
+        messagebox.showerror("Ошибка", "Эти поля не могут быть пустыми.")
+        return
+
     if appendUser(username, password):
         messagebox.showinfo("Успех!", "Вы зарегестрировались!")
         entry2.delete(0, END)
@@ -83,6 +83,11 @@ def visible(event):
         entry2.configure(show = '*')
         vis.config(text = f"👁", font = "ProunX 12")
 
+def forgetPass(event):
+    troll.configure(text = "А вот это - явно не моя проблема")
+    troll.place(x = 50, y = 375)
+
+
 app = Tk()
 app["bg"] = "#C5D0E6"
 app.iconbitmap('auto.ico')
@@ -91,7 +96,7 @@ app.geometry("300x400")
 app.resizable(False, False)
 app.geometry("+820+300")
 
-img = PhotoImage(file = "user (1).png")
+img = PhotoImage(file = "user.png")
 b = Label(image = img, background = "#C5D0E6")
 b.image = img
 b.pack(pady = 10)
@@ -114,13 +119,20 @@ entry2 = ttk.Entry(app, show = "*")
 entry2.place(anchor = CENTER, relx = 0.25, rely = 0.25, x = 70, y = 60,width = 150 )
 
 # visible = Button(app, text = f"👁",bg = "#C5D0E6", command = visible)
-vis = ttk.Label(app, text = f"👁", background = "#C5D0E6", font = 12)
+vis = ttk.Label(app, text = f"👁", background = "#C5D0E6", font = "ProunX 12")
 vis.place(anchor = CENTER, relx = 0.25, rely = 0.25, x = 160, y = 60,width = 24, height = 24)
 vis.bind("<Button-1>", visible)
 
-conn = sqlite3.connect('usersDB.db')
+troll = ttk.Label(app, text = "Забыли пароль?", background = "#C5D0E6", font = "ProunX 9 italic ", foreground = "gray")
+troll.place(x = 97, y = 375)
+troll.bind("<Button-1>", forgetPass)
+
+
+
+
 
 mainloop()
+# conn = sqlite3.connect('usersDB.db')
 # with conn:
 #     cursor = conn.cursor()
 #     cursor.execute("UPDATE users SET role = 'admin' WHERE username = 'igor'")
