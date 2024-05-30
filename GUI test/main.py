@@ -2,6 +2,7 @@ import sqlite3
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+from idlelib.tooltip import Hovertip
 
 # conn = sqlite3.connect('usersDB.db')
 # cursor = conn.cursor()
@@ -100,6 +101,7 @@ btn.place(relx = 0.25, rely = 0.25, x = -5, y = 200, width = 160, height = 25)
 
 NewUs = Button(app, text = "Еще не зарегастрированы?", command = inputRegister)
 NewUs.pack(side = BOTTOM, pady = 30)
+Hovertip(NewUs, "Чтобы зарегестрироватьсявам нужно ввести\nлогин в первое поле, а для пароля - во второе поле\n", hover_delay = 70)
 
 label1 = ttk.Label(text = "login", font = "ProunX 11 bold", background = "#C5D0E6")
 label1.place(x = 69, y = 67, width = 150 )
